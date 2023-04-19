@@ -1,20 +1,17 @@
-const Users = require('./user')
+const Users = require('../models/Usuario')
 
 const User = {
   login: async (req, res) => {
     const user = new Users(req.body)
     try {
-      const isUser = await Users.findOne({ email: user.email })
+      const isUser = await Users.findOne({
+        email: user.email,
+        contraseña: user.contraseña,
+      })
       if (!isUser) {
         res.status(403).send('Email o contraseña inválida')
       } else {
-        // TODO: Comparar Usuario con el de la base de datos
-        if (isMatch) {
-          const signed = signToken(isUser._id)
-          res.status(200).send(signed)
-        } else {
-          res.status(403).send('Email o contraseña inválida')
-        }
+        res.status(200).send(isUser)
       }
     } catch (err) {
       res.status(500).send(err.message)
