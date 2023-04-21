@@ -1,5 +1,7 @@
+//Modulo mongoose
 const mongoose = require('mongoose')
 
+// Creo modelo de usuario
 const Usuarios = mongoose.model('Usuario', {
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
