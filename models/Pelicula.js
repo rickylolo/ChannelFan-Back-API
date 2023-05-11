@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const Peliculas = mongoose.model('Reseña', {
+const Peliculas = mongoose.model('Pelicula', {
   titulo: { type: String, required: true },
   año: { type: String, required: true },
   director: { type: String, required: true },

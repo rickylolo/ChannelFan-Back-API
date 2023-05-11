@@ -24,7 +24,9 @@ app.use('/api', peliculaRoutes)
 app.use('/api', generoRoutes)
 
 //Aqui ira nuestra conexión con la base de datos
-mongoose.connect('')
+mongoose.connect(
+  'mongodb+srv://channelfanADMIN:w1NZkgWYlpH6gKDh@channelfandatabase.49oe5yn.mongodb.net/?retryWrites=true&w=majority'
+)
 
 // Cualquier otra ruta que no este definida arroja un status 404 page not found
 app.get('*', (req, res) => {
