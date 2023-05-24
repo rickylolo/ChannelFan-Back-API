@@ -3,13 +3,13 @@ const Generos = require('../models/Genero')
 const Genero = {
   get: async (req, res) => {
     const { id } = req.params
-    const Genero = await Generos.findOne({ _id: id })
+    const Genero = await Generos.findOne({ _id: id }).populate({ path: 'peliculas', model: 'Pelicula' }).exec()
     res.status(200).send(Genero)
   },
 
   list: async (req, res) => {
-    const Generos = await Generos.find()
-    res.status(200).send(Generos)
+    const Genero = await Generos.find().populate({ path: 'peliculas', model: 'Pelicula' }).exec()
+    res.status(200).send(Genero)
   },
 
   create: async (req, res) => {
@@ -31,7 +31,7 @@ const Genero = {
     const { id } = req.params
     const Genero = await Generos.findOne({ _id: id })
     if (Genero) {
-      await Genero.remove()
+      await Genero.deleteOne(Genero._id)
     }
     res.sendStatus(204)
   },

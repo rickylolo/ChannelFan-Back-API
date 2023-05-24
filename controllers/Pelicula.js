@@ -3,12 +3,12 @@ const Peliculas = require('../models/Pelicula')
 const Pelicula = {
   get: async (req, res) => {
     const { id } = req.params
-    const Pelicula = await Peliculas.findOne({ _id: id })
+    const Pelicula = await Peliculas.findOne({ _id: id }).populate({ path: 'generos', model: 'Genero' }).exec()
     res.status(200).send(Pelicula)
   },
 
   list: async (req, res) => {
-    const Pelicula = await Peliculas.find()
+    const Pelicula = await Peliculas.find().populate({ path: 'generos', model: 'Genero' }).exec()
     res.status(200).send(Pelicula)
   },
 
@@ -31,7 +31,7 @@ const Pelicula = {
     const { id } = req.params
     const Pelicula = await Peliculas.findOne({ _id: id })
     if (Pelicula) {
-      await Pelicula.remove()
+      await Pelicula.deleteOne(Pelicula._id)
     }
     res.sendStatus(204)
   },

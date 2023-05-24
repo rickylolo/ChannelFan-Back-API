@@ -1,12 +1,36 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Reseñas = mongoose.model('Reseña', {
-  idPelicula: { type: String, required: true },
-  idUsuario: { type: String, required: true },
-  titulo: { type: String, required: true },
-  descripcion: { type: String, required: true },
-  calificacion: { type: String, required: true },
-  fecha: { type: String, required: true },
-})
+const Schema = mongoose.Schema;
 
-module.exports = Reseñas
+const ReseñaSchema = new Schema({
+  pelicula: {
+    type: Schema.Types.ObjectId,
+    ref: "Pelicula",
+    required: true
+  },
+  usuario: {
+    type: Schema.Types.ObjectId,
+    ref: "Usuario",
+    required: true
+  },
+  titulo: {
+    type: String,
+    required: true
+  },
+  descripcion: {
+    type: String,
+    required: true
+  },
+  calificacion: {
+    type: String,
+    required: true
+  },
+  fecha: {
+    type: String,
+    required: true
+  },
+});
+
+const Reseña = mongoose.model('Reseña', ReseñaSchema);
+
+module.exports = Reseña;
