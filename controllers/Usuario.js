@@ -14,7 +14,7 @@ const User = {
       if (!isUser) {
         res.status(403).send('Email o contraseña inválida')
       } else {
-        res.status(200).send(isUser) // Regreso mi usuario
+        res.status(200).send(isUser._id) // Regreso mi usuario
       }
     } catch (err) {
       res.status(500).send(err.message)

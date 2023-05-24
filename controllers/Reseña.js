@@ -8,8 +8,8 @@ const Reseña = {
   },
 
   list: async (req, res) => {
-    const Reseñas = await Reseñas.find()
-    res.status(200).send(Reseñas)
+    const Reseña = await Reseñas.find()
+    res.status(200).send(Reseña)
   },
 
   create: async (req, res) => {

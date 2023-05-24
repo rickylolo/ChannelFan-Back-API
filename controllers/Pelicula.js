@@ -8,8 +8,8 @@ const Pelicula = {
   },
 
   list: async (req, res) => {
-    const Peliculas = await Peliculas.find()
-    res.status(200).send(Peliculas)
+    const Pelicula = await Peliculas.find()
+    res.status(200).send(Pelicula)
   },
 
   create: async (req, res) => {
