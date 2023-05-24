@@ -12,7 +12,7 @@ const generoRoutes = require('./routes/Genero')
 const app = express()
 
 //Especifico el puerto a utilizar
-const port = 3000
+const port = process.env.PORT || 3000
 
 // Especifico que express use JSON para el body
 app.use(express.json())
@@ -34,5 +34,5 @@ app.get('*', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log('Arrancando al aplicación')
+  console.log("Servidor escuchando en el puerto: ",port)
 })
