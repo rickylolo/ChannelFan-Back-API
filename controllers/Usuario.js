@@ -30,7 +30,7 @@ const User = {
 
   list: async (req, res) => {
     const users = await Users.find() //Encontrar todos los usuarios
-    res.status(200).send(users)
+    res.status(200).json({ users })
   },
 
   create: async (req, res) => {
@@ -40,6 +40,7 @@ const User = {
     if (isUser) {
       return res.status(403).send('Usuario ya existente') // Validación para no repetir usuario en base de datos
     }
+
     const savedUser = await user.save() // Guardo al usuario
     res.status(201).send(savedUser.id) // Envio el id de mi usuario
   },
