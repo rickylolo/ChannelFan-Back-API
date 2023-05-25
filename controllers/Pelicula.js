@@ -8,8 +8,8 @@ const Pelicula = {
   },
 
   list: async (req, res) => {
-    const Pelicula = await Peliculas.find().populate({ path: 'generos', model: 'Genero' }).exec()
-    res.status(200).send(Pelicula)
+    const peliculas = await Peliculas.find().populate({ path: 'generos', model: 'Genero' }).exec()
+    res.status(200).json({ peliculas })
   },
 
   create: async (req, res) => {

@@ -9,7 +9,7 @@ const User = {
       // Busco si hay un usuario que haga match con correo y contraseña
       const isUser = await Users.findOne({
         email: user.email,
-        contraseña: user.contraseña,
+        password: user.password,
       })
       if (!isUser) {
         res.status(403).send('Email o contraseña inválida')

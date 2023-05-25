@@ -2,11 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const GeneroSchema = new Schema({
-  peliculas: [{
-    type: Schema.Types.ObjectId,
-    ref: "Pelicula"
-  }],
-  nombre: {
+   nombre: {
     type: String,
     required: true
   },
