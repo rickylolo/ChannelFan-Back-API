@@ -30,7 +30,7 @@ const User = {
   },
 
     //Obtener datos de reseñas de un usuario
-    getReview: async (req, res) => {
+  getReview: async (req, res) => {
       try{
         const { id } = req.params
         const reviews = await Reviews.find({ usuario: id });
@@ -40,7 +40,63 @@ const User = {
         console.error(error);
         res.status(500).json({ mensaje: 'Ocurrió un error al obtener las reseñas del usuario' });
       }
-    },
+  },
+
+  getFavoriteReviews: async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      // Buscar el usuario por su ID
+      const user = await Users.findById(id);
+  
+      // Verificar si el usuario no existe
+      if (!user) {
+        return res.status(404).json({ mensaje: 'El usuario no se encontró' });
+      }
+  
+      // Verificar si el usuario no tiene reseñas favoritas
+      if (!user.favoritos || user.favoritos.length === 0) {
+        return res.status(404).json({ mensaje: 'No se encontraron reseñas favoritas para el usuario' });
+      }
+  
+      // Cargar las reseñas favoritas del usuario con la información completa de la película
+      await user.populate({ path: 'favoritos', populate: { path: 'pelicula' } });
+      const favoriteReviews = user.favoritos.map((review) => {
+        const { generos, ...pelicula } = review.pelicula.toObject();
+        return {
+          ...review.toObject(),
+          pelicula,
+        };
+      });
+  
+      res.status(200).json({favoriteReviews}); // Devolver las reseñas favoritas
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ mensaje: 'Ocurrió un error al obtener las reseñas del usuario' });
+    }
+  },
+
+   //Añadir una reseña a favoritos
+   addFavoriteReview: async (req, res) => {
+    try {
+      const { idUsuario, idReview } = req.body;
+  
+      // Verificar si el usuario ya tiene el ID de la reseña en la colección de favoritos
+      const user = await Users.findById(idUsuario);
+      if (user.favoritos.includes(idReview)) {
+        return res.status(400).json({ mensaje: 'La reseña ya está en la lista de favoritos' });
+      }
+  
+      // Agregar la ID de la reseña a la colección de favoritos
+      user.favoritos.push(idReview);
+      await user.save();
+  
+      res.status(200).json(user); // Devolver el usuario actualizado con la reseña agregada a favoritos
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ mensaje: 'Ocurrió un error al añadir una reseña a favoritos' });
+    }
+  },
 
   list: async (req, res) => {
     const users = await Users.find() //Encontrar todos los usuarios
