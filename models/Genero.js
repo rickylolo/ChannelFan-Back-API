@@ -10,6 +10,11 @@ const GeneroSchema = new Schema({
     type: String,
     required: true
   },
+  peliculas: [{
+    type: Schema.Types.ObjectId,
+    ref: "Pelicula",
+    required: true
+  }]
 });
 
 const Generos = mongoose.model('Genero', GeneroSchema);

@@ -1,5 +1,6 @@
 //Traigo mi modelo de usuario
 const Users = require('../models/Usuario')
+const Reviews = require('../models/Reseña')
 
 const User = {
   //------------------------ AQUI TENGO TODAS MIS ACCIONES -----------------------
@@ -27,6 +28,19 @@ const User = {
     const user = await Users.findOne({ _id: id }) //Obtener datos con un id
     res.status(200).send(user)
   },
+
+    //Obtener datos de reseñas de un usuario
+    getReview: async (req, res) => {
+      try{
+        const { id } = req.params
+        const reviews = await Reviews.find({ usuario: id });
+        res.status(200).json({reviews});
+      }
+      catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: 'Ocurrió un error al obtener las reseñas del usuario' });
+      }
+    },
 
   list: async (req, res) => {
     const users = await Users.find() //Encontrar todos los usuarios
