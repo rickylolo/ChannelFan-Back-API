@@ -116,12 +116,19 @@ const User = {
   },
 
   update: async (req, res) => {
-    const { id } = req.params
-    const user = await Users.findOne({ _id: id }) //Obtengo mi usuario con el id
-    Object.assign(user, req.body) // Le asigno los valores del body a ese usuario
-    await user.save() // Lo guardo (se actualizan los datos)
-    res.sendStatus(204)
+    const { id } = req.params;
+    const user = await Users.findOne({ _id: id });
+  
+    if (req.body.password === "") {
+      // Si el campo de contraseña está vacío, mantén la contraseña actual
+      delete req.body.password; // Elimina el campo de contraseña del cuerpo
+    }
+  
+    Object.assign(user, req.body); // Asigna los valores del cuerpo al usuario
+    await user.save(); // Guarda los cambios (actualiza los datos)
+    res.sendStatus(204);
   },
+  
 
   destroy: async (req, res) => {
     const { id } = req.params

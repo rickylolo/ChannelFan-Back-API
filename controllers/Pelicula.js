@@ -4,10 +4,18 @@ const Reviews = require('../models/Reseña')
 
 const Pelicula = {
   get: async (req, res) => {
-    const { id } = req.params
-    const Pelicula = await Peliculas.findOne({ _id: id }).populate({ path: 'generos', model: 'Genero' }).exec()
-    res.status(200).send(Pelicula)
-  },
+    const { id } = req.params;
+    const Pelicula = await Peliculas.findOne({ _id: id }).populate({ path: 'generos', model: 'Genero' }).exec();
+  
+    // Modificar la estructura de los datos
+    const peliculaSinGeneros = { ...Pelicula.toObject() };
+    peliculaSinGeneros.generos.forEach((genero) => {
+      delete genero.peliculas;
+    });
+  
+    res.status(200).send(peliculaSinGeneros);
+  }
+  ,
 
   list: async (req, res) => {
     const peliculas = await Peliculas.find().populate({ path: 'generos', model: 'Genero' }).exec();

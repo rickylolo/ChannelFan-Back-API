@@ -3,10 +3,23 @@ const Peliculas = require('../models/Pelicula')
 
 const Genero = {
   get: async (req, res) => {
-    const { id } = req.params
-    const Genero = await Generos.findOne({ _id: id }).populate({ path: 'peliculas', model: 'Pelicula' }).exec()
-    res.status(200).send(Genero)
-  },
+    const { id } = req.params;
+    const Genero = await Generos.findOne({ _id: id }).populate({ path: 'peliculas', model: 'Pelicula' }).exec();
+  
+    // Eliminar la propiedad "generos" de cada objeto "peliculas" en el objeto "Genero"
+    const peliculasSinGenero = Genero.peliculas.map(pelicula => {
+      const { generos, ...peliculaSinGenero } = pelicula.toObject();
+      return peliculaSinGenero;
+    });
+  
+    const GeneroSinPropiedad = {
+      ...Genero.toObject(),
+      peliculas: peliculasSinGenero
+    };
+  
+    res.status(200).json(GeneroSinPropiedad);
+  }
+  ,
 
   list: async (req, res) => {
     const Genero = await Generos.find().populate({ path: 'peliculas', model: 'Pelicula' }).exec();
