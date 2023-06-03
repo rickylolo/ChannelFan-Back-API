@@ -49,20 +49,28 @@ const Pelicula = {
     }
   },
 
-  getReviews: async (req, res) =>{
-    try{
-      const { id } = req.params
-      const reviews = await Reviews.find({ pelicula: id });
-      res.status(200).json({reviews});
-    }
-    catch (error) {
+  getReviews: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const reviews = await Reviews.find({ pelicula: id }).populate('usuario', '-pelicula -favoritos');
+  
+      const reviewsWithoutPelicula = reviews.map((review) => {
+        const reviewWithoutPelicula = { ...review.toObject() };
+        delete reviewWithoutPelicula.pelicula;
+        delete reviewWithoutPelicula.usuario.favoritos;
+        return reviewWithoutPelicula;
+      });
+  
+      res.status(200).json({ reviews: reviewsWithoutPelicula });
+    } catch (error) {
       console.error(error);
-      res.status(500).json({ mensaje: 'Ocurrió un error al obtener las reseñas de la pelicula' });
+      res.status(500).json({ mensaje: 'Ocurrió un error al obtener las reseñas de la película' });
     }
-  },
+  }
+  ,
 
   create: async (req, res) => {
-    console.log(req.body)
+
     const Pelicula = new Peliculas(req.body)
     const savedPelicula = await Pelicula.save()
     res.status(201).send(savedPelicula.id)
@@ -77,13 +85,27 @@ const Pelicula = {
   },
 
   destroy: async (req, res) => {
-    const { id } = req.params
-    const Pelicula = await Peliculas.findOne({ _id: id })
-    if (Pelicula) {
-      await Pelicula.deleteOne(Pelicula._id)
+    const { id } = req.params;
+  
+    // Eliminar la película
+    const pelicula = await Peliculas.findOne({ _id: id });
+    if (pelicula) {
+      await pelicula.deleteOne({ _id: pelicula._id });
     }
-    res.sendStatus(204)
+  
+    // Eliminar la referencia de la película en la colección Genero
+    await GeneroSchema.updateMany(
+      { peliculas: id },
+      { $pull: { peliculas: id } }
+    );
+  
+    // Eliminar las reseñas asociadas a la película
+    await ReseñaSchema.deleteMany({ pelicula: id });
+  
+
+    res.sendStatus(204);
   },
+  
 }
 
 module.exports = Pelicula
